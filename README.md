@@ -21,8 +21,8 @@ AST 的规范 -- [EsTree](https://github.com/estree/estree)
 - [acorn](https://github.com/acornjs/acorn) 目前webpack的AST解析器用的就是acorn；
 - [@babel/parser(babylon)](https://github.com/babel/babel/tree/master/packages/babel-parser) babel官方的解析器，最初fork于acorn；
 - [espree](https://github.com/eslint/espree) eslint、prettier的默认解析器，基于acorn；
-- [swc](https://github.com/swc-project/swc) 用的rust编写的js编译器，单核比babel快4倍，4核比babel快70倍；
-- [esbuild](https://github.com/evanw/esbuild/) esbuild是用go编写的下一代web打包工具，它拥有目前最快的打包记录和压缩记录，snowpack和vite的也是使用它来做打包工具；
+- [swc](https://github.com/swc-project/swc) 用rust编写的js编译器，单核比babel快4倍，4核比babel快70倍；
+- [esbuild](https://github.com/evanw/esbuild/) 用go编写的web打包工具，它拥有目前最快的打包记录和压缩记录，snowpack和vite的也是使用它来做打包工具；
 
 ### 工具库 recast
 
