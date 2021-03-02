@@ -2,7 +2,7 @@
 
 - [简介](#简介)
 - [常用 JS 解析器](#常用-JS-解析器)
-- [Recast](#Recast)
+- [工具库 recast](#工具库-recast)
 - [实现一个 webpack loader](#实现一个-webpack-loader)
 
 ### 简介
@@ -24,9 +24,9 @@ AST 的规范 -- [EsTree](https://github.com/estree/estree)
 - [swc](https://github.com/swc-project/swc) 用的rust编写的js编译器，单核比babel快4倍，4核比babel快70倍；
 - [esbuild](https://github.com/evanw/esbuild/) esbuild是用go编写的下一代web打包工具，它拥有目前最快的打包记录和压缩记录，snowpack和vite的也是使用它来做打包工具；
 
-### 工具库 [recast](https://github.com/benjamn/recast)
+### 工具库 recast
 
-recast 可以同时使用多种解析器，并且可以自定义传入需要的解析器。
+[recast](https://github.com/benjamn/recast) 可以同时使用多种解析器，并且可以自定义传入需要的解析器。
 
 - [recast.parse](#recast.parse)
 - [recast.print](#recast.print)
