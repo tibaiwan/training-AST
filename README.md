@@ -2,6 +2,7 @@
 
 - [简介](#简介)
 - [常用 JS 解析器](#常用-JS-解析器)
+- [词法分析与语法分析](#词法分析与语法分析)
 - [工具库 recast](#工具库-recast)
 - [实现一个 webpack loader](#实现一个-webpack-loader)
 
@@ -18,11 +19,84 @@ AST 的规范 -- [EsTree](https://github.com/estree/estree)
 
 - [uglify-js](https://github.com/mishoo/UglifyJS) 用于混淆和压缩代码；
 - [Esprima](https://esprima.org/) 第一个用JS编写的符合EsTree规范的JS的解析器；
-- [acorn](https://github.com/acornjs/acorn) 目前webpack的AST解析器用的就是acorn；
+- [acorn](https://github.com/acornjs/acorn) 目前webpack的AST解析器；
 - [@babel/parser(babylon)](https://github.com/babel/babel/tree/master/packages/babel-parser) babel官方的解析器，最初fork于acorn；
 - [espree](https://github.com/eslint/espree) eslint、prettier的默认解析器，基于acorn；
 - [swc](https://github.com/swc-project/swc) 用rust编写的js编译器，单核比babel快4倍，4核比babel快70倍；
 - [esbuild](https://github.com/evanw/esbuild/) 用go编写的web打包工具，它拥有目前最快的打包记录和压缩记录，snowpack和vite的也是使用它来做打包工具；
+
+### 词法分析与语法分析
+
+#### 词法分析/分词(Tokenizing/Lexing)
+
+将字符流(char stream)转换为记号流(token stream)，由字符串组成的字符分解成有意义的代码块，这些代码块称为词法单元。  
+例如：一段 JS 代码 var name = 'Hello World'; 会被分解为词法单元：var、name、=、Hello World、;。
+
+```json
+[
+  {
+    "type": "Keyword",
+    "value": "var"
+  },
+  {
+    "type": "Identifier",
+    "value": "name"
+  },
+  {
+    "type": "Punctuator",
+    "value": "="
+  },
+  {
+    "type": "String",
+    "value": "'Hello World'"
+  },
+  {
+    "type": "Punctuator",
+    "value": ";"
+  }
+]
+```
+最小词法单元主要有空格、注释、字符串、数字、标志符、运算符、括号等。
+
+#### 语法分析/解析(Parsing)
+
+将词法单元流转换成一个由元素逐级嵌套所组成的代表了程序语法结构的树（AST）。
+词法分析和语法分析是交错进行的，词法分析器每取得一个词法记号，就将其送入语法分析器进行分析。
+
+<img width=800 src="./img/ast-parse-process.png">
+
+var name = 'Hello World'; 转成 AST 如下：
+
+```json
+{
+  "type": "Program",
+  "body": [
+    {
+      "type": "VariableDeclaration",
+      "declarations": [
+        {
+          "type": "VariableDeclarator",
+          "id": {
+            "type": "Identifier",
+            "name": "name"
+          },
+          "init": {
+            "type": "Literal",
+            "value": "Hello World",
+            "raw": "'Hello World'"
+          }
+        }
+      ],
+      "kind": "var"
+    }
+  ],
+  "sourceType": "script"
+}
+```
+
+#### 代码生成(Code Generation)
+
+深度优先遍历整个 AST，然后构建可以表示转换后代码的字符串。
 
 ### 工具库 recast
 
@@ -133,8 +207,8 @@ $ node read demo.js
 
 遍历 AST 节点
 
-- 每个 visit，必须加上 return false，或者 this.traverse(path)
-- 在需要遍历的类型前面加上 visit 即可遍历
+- 每个 visit，必须加上 return false，或者 this.traverse(path)，否则报错；
+- 在需要遍历的类型前面加上 visit 即可遍历；
 
 ```js
 const recast = require('recast')
