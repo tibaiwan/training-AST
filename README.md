@@ -1,7 +1,6 @@
-## AST入门与简单应用
+# AST入门与简单应用
 
 - [简介](#简介)
-- [常用 JS 解析器](#常用-JS-解析器)
 - [词法分析与语法分析](#词法分析与语法分析)
     - [词法分析/分词(Tokenizing/Lexing)](#词法分析/分词(Tokenizing/Lexing))
     - [语法分析/解析(Parsing)](#语法分析/解析(Parsing))
@@ -10,6 +9,7 @@
     - [Statement（语句）](#Statement（语句）)
     - [Declaration（声明）](#Declaration（声明）)
     - [Expression（表达式）](#Expression（表达式）)
+- [常用 JS 解析器](#常用-JS-解析器)
 - [工具库 recast](#工具库-recast)
     - [recast.parse](#recast.parse)
     - [recast.print](#recast.print)
@@ -19,29 +19,19 @@
     - [recast.visit](#recast.visit)
     - [recast.types.namedTypes](#recast.types.namedTypes)
 - [实现一个 webpack loader](#实现一个-webpack-loader)
+- [Online工具](#Online工具)
+- [See Also](#See-Also)
 
-### 简介
+## 简介
 
 > AST：全称 Abstract Syntax Tree，意为抽象语法树，它是源代码语法结构的树状表现形式。
 
 应用场景：代码编译、压缩、混淆、优化，打包构建，lint工具。  
 使用AST的工具或库：Babel，TypeScript，Webpack，Rollup，UglifyJS，ESlint。
 
-### 常用 JS 解析器
+## 词法分析与语法分析
 
-AST 的规范 -- [EsTree](https://github.com/estree/estree)
-
-- [uglify-js](https://github.com/mishoo/UglifyJS) 用于混淆和压缩代码；
-- [Esprima](https://esprima.org/) 第一个用JS编写的符合EsTree规范的JS的解析器；
-- [acorn](https://github.com/acornjs/acorn) 目前webpack的AST解析器；
-- [@babel/parser(babylon)](https://github.com/babel/babel/tree/master/packages/babel-parser) babel官方的解析器，最初fork于acorn；
-- [espree](https://github.com/eslint/espree) eslint、prettier的默认解析器，基于acorn；
-- [swc](https://github.com/swc-project/swc) 用rust编写的js编译器，单核比babel快4倍，4核比babel快70倍；
-- [esbuild](https://github.com/evanw/esbuild/) 用go编写的web打包工具，它拥有目前最快的打包记录和压缩记录，snowpack和vite的也是使用它来做打包工具；
-
-### 词法分析与语法分析
-
-#### 词法分析/分词(Tokenizing/Lexing)
+### 词法分析/分词(Tokenizing/Lexing)
 
 将字符流(char stream)转换为记号流(token stream)，由字符串组成的字符分解成有意义的代码块，这些代码块称为词法单元。  
 例如：一段 JS 代码 var name = 'Hello World'; 会被分解为词法单元：var、name、=、Hello World、;。
@@ -72,7 +62,7 @@ AST 的规范 -- [EsTree](https://github.com/estree/estree)
 ```
 最小词法单元主要有空格、注释、字符串、数字、标识符、运算符、括号等。
 
-#### 语法分析/解析(Parsing)
+### 语法分析/解析(Parsing)
 
 将词法单元流转换成一个由元素逐级嵌套所组成的代表了程序语法结构的树（AST）。
 词法分析和语法分析是交错进行的，词法分析器每取得一个词法记号，就将其送入语法分析器进行分析。
@@ -108,13 +98,13 @@ var name = 'Hello World'; 转成 AST 如下：
 }
 ```
 
-#### 代码生成(Code Generation)
+### 代码生成(Code Generation)
 
 深度优先遍历整个 AST，然后构建可以表示转换后代码的字符串。
 
-### 常用AST对象
+## 常用AST对象
 
-#### Statement（语句）
+### Statement（语句）
 
 ```js
 BlockStatement
@@ -137,7 +127,7 @@ LetStatement
 DebuggerStatement
 ```
 
-#### Declaration（声明）
+### Declaration（声明）
 
 ```js
 FunctionDeclaration
@@ -145,7 +135,7 @@ VariableDeclaration
 VariableDeclarator // 声明符
 ```
 
-#### Expression（表达式）
+### Expression（表达式）
 
 ```js
 ThisExpression
@@ -162,10 +152,22 @@ NewExpression
 MemberExpression
 YieldExpression
 ComprehensionExpression
-graphExpression
+GraphExpression
 ```
 
-### 工具库 recast
+## 常用 JS 解析器
+
+AST 的规范 -- [EsTree](https://github.com/estree/estree)
+
+- [uglify-js](https://github.com/mishoo/UglifyJS) 用于混淆和压缩代码；
+- [Esprima](https://esprima.org/) 第一个用JS编写的符合EsTree规范的JS的解析器；
+- [acorn](https://github.com/acornjs/acorn) 目前webpack的AST解析器；
+- [@babel/parser(babylon)](https://github.com/babel/babel/tree/master/packages/babel-parser) babel官方的解析器，最初fork于acorn；
+- [espree](https://github.com/eslint/espree) eslint、prettier的默认解析器，基于acorn；
+- [swc](https://github.com/swc-project/swc) 用rust编写的js编译器，单核比babel快4倍，4核比babel快70倍；
+- [esbuild](https://github.com/evanw/esbuild/) 用go编写的web打包工具，它拥有目前最快的打包记录和压缩记录，snowpack和vite的也是使用它来做打包工具；
+
+## 工具库 recast
 
 [recast](https://github.com/benjamn/recast) 可以同时使用多种解析器，并且可以自定义传入需要的解析器。
 
@@ -177,7 +179,7 @@ graphExpression
 - [recast.visit](#recast.visit)
 - [recast.types.namedTypes](#recast.types.namedTypes)
 
-#### recast.parse
+### recast.parse
 
 ```js
 const recast = require('recast')
@@ -192,7 +194,7 @@ const add = ast.program.body[0]
 console.log(add)
 ```
 
-#### recast.print
+### recast.print
 
 ```js
 const recast = require('recast')
@@ -206,7 +208,7 @@ const ast = recast.parse(code)
 console.log(recast.print(ast).code)
 ```
 
-#### recast.prettyPrint
+### recast.prettyPrint
 
 ```js
 const recast = require('recast')
@@ -218,7 +220,7 @@ const ast = recast.parse(code)
 console.log(recast.prettyPrint(ast, { tabWidth: 2 }).code)
 ```
 
-#### recast.types.builders
+### recast.types.builders
 
 示例：具名函数转换成箭头函数
 
@@ -250,7 +252,7 @@ const output = recast.print(ast).code
 console.log(output)
 ```
 
-#### recast.run
+### recast.run
 
 读取文件命令行
 
@@ -270,7 +272,7 @@ function add (a, b) {
 
 $ node read demo.js
 
-#### recast.visit
+### recast.visit
 
 遍历 AST 节点
 
@@ -290,7 +292,7 @@ recast.run((ast, printSource) => {
 })
 ```
 
-#### recast.types.namedTypes
+### recast.types.namedTypes
 
 判断 AST 对象是否为指定类型
 
@@ -310,7 +312,7 @@ recast.visit(ast, {
 })
 ```
 
-### 实现一个 webpack loader
+## 实现一个 webpack loader
 
 转换前：
 ```js
@@ -382,11 +384,11 @@ const output = recast.print(ast).code
 console.log(output)
 ```
 
-### 工具
+## Online工具
 
 - [AST explorer](https://astexplorer.net/)
 
-#### See Also
+## See Also
 
 - [AST 对象文档](https://developer.mozilla.org/zh-CN/docs/Mozilla/Projects/SpiderMonkey/Parser_API)
 - [@babel/types](https://babeljs.io/docs/en/babel-types)
