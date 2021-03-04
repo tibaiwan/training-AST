@@ -1,7 +1,6 @@
 /*
 
 读取文件：recast.run
-$ node test05 test05_sub.js
 
 */
 
