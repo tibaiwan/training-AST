@@ -1,6 +1,6 @@
 /*
 
-增加：this.loading = false
+增加：this.loading = false; this.track(err);
 
 */
 
