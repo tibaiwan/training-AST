@@ -9,9 +9,12 @@ recast
 
 const recast = require('recast')
 
-const code = `function add(a, b) {return a + b;}`
+const code = `var a = 'Hello World';`
+// const code = `function add(a, b) {return a + b;}`
 
 const ast = recast.parse(code)
+console.log('ast', JSON.stringify(ast))
+
 const printAST = recast.print(ast)
 const prettyPrint = recast.prettyPrint(ast)
 

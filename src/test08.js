@@ -1,6 +1,6 @@
 /*
 
-增加：err => { this.track(err) }
+增加：this.loading = false
 
 */
 
@@ -11,15 +11,32 @@ const {
   callExpression,
 } = recast.types.builders
 
+const t = recast.types.namedTypes
+
 const code = `this.axiosFetch(this.formData).then(res => {
   this.loading = false
   this.handleClose()
 })`
-const ast = recast.parse(code)
 
-const trackCode = `err => { this.track(err) }`
+const ast = recast.parse(code)
+let firstExp
+
+recast.visit(ast, {
+  visitArrowFunctionExpression ({ node, parentPath }) {
+    const parentNode = parentPath.node
+    if (
+      t.CallExpression.check(parentNode) &&
+      t.Identifier.check(parentNode.callee.property) &&
+      parentNode.callee.property.name === 'then'
+    ) {
+      firstExp = node.body.body[0]
+    }
+    return false
+  }
+})
+
+const trackCode = `err => { ${recast.print(firstExp).code}; this.track(err) }`
 const trackAST = recast.parse(trackCode).program.body[0].expression
-console.log('trackAST', trackAST)
 
 recast.visit(ast, {
   visitCallExpression (path) {
@@ -35,5 +52,5 @@ recast.visit(ast, {
   }
 })
 
-const output = recast.print(ast).code
+const output = recast.prettyPrint(ast).code
 console.log(output)

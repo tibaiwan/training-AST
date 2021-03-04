@@ -3,7 +3,21 @@
 - [简介](#简介)
 - [常用 JS 解析器](#常用-JS-解析器)
 - [词法分析与语法分析](#词法分析与语法分析)
+    - [词法分析/分词(Tokenizing/Lexing)](#词法分析/分词(Tokenizing/Lexing))
+    - [语法分析/解析(Parsing)](#语法分析/解析(Parsing))
+    - [代码生成(Code Generation)](#代码生成(Code-Generation))
+- [常用AST对象](#常用AST对象)
+    - [Statement（语句）](#Statement（语句）)
+    - [Declaration（声明）](#Declaration（声明）)
+    - [Expression（表达式）](#Expression（表达式）)
 - [工具库 recast](#工具库-recast)
+    - [recast.parse](#recast.parse)
+    - [recast.print](#recast.print)
+    - [recast.prettyPrint](#recast.prettyPrint)
+    - [recast.types.builders](#recast.types.builders)
+    - [recast.run](#recast.run)
+    - [recast.visit](#recast.visit)
+    - [recast.types.namedTypes](#recast.types.namedTypes)
 - [实现一个 webpack loader](#实现一个-webpack-loader)
 
 ### 简介
@@ -56,7 +70,7 @@ AST 的规范 -- [EsTree](https://github.com/estree/estree)
   }
 ]
 ```
-最小词法单元主要有空格、注释、字符串、数字、标志符、运算符、括号等。
+最小词法单元主要有空格、注释、字符串、数字、标识符、运算符、括号等。
 
 #### 语法分析/解析(Parsing)
 
@@ -97,6 +111,59 @@ var name = 'Hello World'; 转成 AST 如下：
 #### 代码生成(Code Generation)
 
 深度优先遍历整个 AST，然后构建可以表示转换后代码的字符串。
+
+### 常用AST对象
+
+#### Statement（语句）
+
+```js
+BlockStatement
+EmptyStatement
+ExpressionStatement
+IfStatement
+LabeledStatement
+BreakStatement
+ContinueStatement
+WithStatement
+SwitchStatement
+ReturnStatement
+TryStatement
+ThrowStatement
+WhileStatement
+DoWhileStatement
+ForInStatement
+ForOfStatement
+LetStatement
+DebuggerStatement
+```
+
+#### Declaration（声明）
+
+```js
+FunctionDeclaration
+VariableDeclaration
+VariableDeclarator // 声明符
+```
+
+#### Expression（表达式）
+
+```js
+ThisExpression
+ArrayExpression
+ObjectExpression
+FunctionExpression
+SequenceExpression
+UnaryExpression
+BinaryExpression
+AssignmentExpression
+LogicalExpression
+ConditionalExpression
+NewExpression
+MemberExpression
+YieldExpression
+ComprehensionExpression
+graphExpression
+```
 
 ### 工具库 recast
 
@@ -144,9 +211,7 @@ console.log(recast.print(ast).code)
 ```js
 const recast = require('recast')
 
-const code = `function add (a, b) {
-  return a +                b
-}`
+const code = `function add (a, b) { return a + b }`
 
 const ast = recast.parse(code)
 
@@ -154,6 +219,8 @@ console.log(recast.prettyPrint(ast, { tabWidth: 2 }).code)
 ```
 
 #### recast.types.builders
+
+示例：具名函数转换成箭头函数
 
 ```js
 const recast = require('recast')
@@ -321,9 +388,9 @@ console.log(output)
 
 #### See Also
 
+- [AST 对象文档](https://developer.mozilla.org/zh-CN/docs/Mozilla/Projects/SpiderMonkey/Parser_API)
+- [@babel/types](https://babeljs.io/docs/en/babel-types)
 - [简单介绍下各种js解析器](https://www.yuque.com/yuexing0921/blog/etiot2)
 - [JS AST 原理揭秘](https://zhaomenghuan.js.org/blog/js-ast-principle-reveals.html)
-- [AST 对象文档](https://developer.mozilla.org/zh-CN/docs/Mozilla/Projects/SpiderMonkey/Parser_API)
 - [AST 与前端工程化实战](https://zhuanlan.zhihu.com/p/77696194)
 - [你不知道的AST](https://aszero.com/2020/06/03/%E4%BD%A0%E4%B8%8D%E7%9F%A5%E9%81%93%E7%9A%84AST/)
-- [@babel/types](https://babeljs.io/docs/en/babel-types)
